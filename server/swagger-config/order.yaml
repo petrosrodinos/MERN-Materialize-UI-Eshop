@@ -1,0 +1,177 @@
+tags:
+  name: Orders
+  description: Create orders,view orders,get products
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Product:
+      message:
+        type: string
+        example: OK
+      products:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            price:
+              type: string
+            quantity:
+              type: string
+            photoUrl:
+              type: string
+            model:
+              type: string
+            screenSize:
+              type: string
+            CPU:
+              type: string
+            camera:
+              type: string
+            battery:
+              type: string
+            SAR:
+              type: string
+            RAM:
+              type: string
+            createdAt:
+              type: date
+
+paths:
+  /eshop/orders:
+    get:
+      summary: Get user orders.
+      tags: [Orders]
+      security:
+        - bearerAuth: []
+      responses:
+        "202":
+          description: user orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OK
+                  orders:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        price:
+                          type: string
+                        quantity:
+                          type: string
+                        photoUrl:
+                          type: string
+                        model:
+                          type: string
+                        screenSize:
+                          type: string
+                        CPU:
+                          type: string
+                        camera:
+                          type: string
+                        battery:
+                          type: string
+                        SAR:
+                          type: string
+                        RAM:
+                          type: string
+                        createdAt:
+                          type: date
+    post:
+      summary: Create an order.
+      tags: [Orders]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: string
+      responses:
+        "202":
+          description: order created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OK
+                  order:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                        userId:
+                          type: string
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+        "404":
+          description: phone is not available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: phone is not available
+
+  /eshop/products:
+    get:
+      summary: Fetch products.
+      tags: [Orders]
+      parameters:
+        - name: pageNumber
+          in: path
+          required: true
+          description: pagination page number
+          schema:
+            type: string
+            minimum: 1
+        - name: perPage
+          in: path
+          required: false
+          description: how many products per page
+          schema:
+            type: string
+            minimum: 1
+      responses:
+        "202":
+          description: products fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: phone is not available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: phone is not available

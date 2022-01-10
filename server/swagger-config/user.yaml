@@ -1,0 +1,104 @@
+tags:
+  name: Users
+  description: User login/registration
+
+paths:
+  /users/login:
+    post:
+      summary: Sign In functionality.
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "202":
+          description: Successfull login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OK
+                  token:
+                    type: string
+        "400":
+          description: Incorect password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password Incorrect
+        "404":
+          description: User does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User does not exist
+
+  /users/register:
+    post:
+      summary: Sign Up functionality.
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                address:
+                  type: string
+                phone:
+                  type: string
+                postalcode:
+                  type: string
+                city:
+                  type: string
+      responses:
+        "202":
+          description: Successfull sign up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OK
+                  token:
+                    type: string
+        "409":
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email already exists
