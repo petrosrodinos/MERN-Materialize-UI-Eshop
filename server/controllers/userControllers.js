@@ -1,8 +1,9 @@
 //const { validationResult } = require("express-validator");
 const User = require("../models/user");
+const VerificationToken = require("../models/verificationToken");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
+const { createToken } = require("../utils/token");
 
 const client = new OAuth2Client(process.env.GOOGLE_KEY);
 
@@ -57,15 +58,11 @@ module.exports.register = async (req, res, next) => {
     return res.json({ message: "Signing up failed, please try again later." });
   }
 
-  let token = createToken({
-    userId: createdUser._id,
-    email: createdUser.email,
-  });
-
   res.json({
     message: "OK",
+    email: createdUser.email,
+    phone: createdUser.phone,
     userId: createdUser._id,
-    token: token,
   });
 };
 
@@ -107,6 +104,17 @@ module.exports.login = async (req, res, next) => {
 
   if (!isValidPassword) {
     return res.json({ message: "Invalid credentials could not log you in." });
+  }
+
+  if (!existingUser.emailVerified || !existingUser.phoneVerified) {
+    return res.json({
+      message: "NOT-VERIFIED",
+      emailVerified: existingUser.emailVerified,
+      phoneVerified: existingUser.phoneVerified,
+      email: existingUser.email,
+      phone: existingUser.phone,
+      userId: existingUser._id,
+    });
   }
 
   let token = createToken({
@@ -159,6 +167,17 @@ module.exports.googleSignUp = async (req, res, next) => {
     if (email_verified) {
       user = await User.findOne({ email: email }).exec();
       if (user) {
+        if (!user.emailVerified || !user.phoneVerified) {
+          return res.json({
+            message: "NOT-VERIFIED",
+            emailVerified: user.emailVerified,
+            phoneVerified: user.phoneVerified,
+            email: user.email,
+            phone: user.phone,
+            userId: user._id,
+          });
+        }
+
         let token = createToken({ userId: user._id, email: user.email });
         return res.json({
           message: "OK",
@@ -167,15 +186,6 @@ module.exports.googleSignUp = async (req, res, next) => {
         });
       } else {
         return res.json({ message: "NOT" });
-        // let hashedPassword = await bcrypt.hash(email, 12);
-
-        // user = new User({
-        //   username: name,
-        //   password: hashedPassword,
-        //   email: email,
-        //   address: "google address",
-        //   phone: "google phone",
-        // });
       }
     } else {
       return res.json({ message: "Error signing with google" });
@@ -183,30 +193,4 @@ module.exports.googleSignUp = async (req, res, next) => {
   } catch (error) {
     return res.json({ message: "Error finding user" });
   }
-
-  // try {
-  //   await user.save();
-  // } catch (err) {
-  //   return res.json({ message: "Signing up failed, please try again later." });
-  // }
-
-  // let token = createToken({ userId: user._id, email: user.email });
-
-  // return res.json({
-  //   message: "OK",
-  //   userId: user._id,
-  //   token: token,
-  // });
-};
-
-const createToken = (values) => {
-  let token;
-  try {
-    token = jwt.sign(values, process.env.JWT_SECRET, { expiresIn: "1h" });
-  } catch (error) {
-    console.log("from token");
-    return res.json({ message: "Error creating token" });
-  }
-
-  return token;
 };

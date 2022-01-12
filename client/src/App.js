@@ -6,8 +6,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Verification from "./pages/Verification";
 import Contact from "./pages/Contact";
 import MobilePhones from "./pages/MobilePhones";
 import MyOrders from "./pages/MyOrders";
@@ -56,10 +55,8 @@ function App() {
       <Route path="/Mobile-Phones" element={<MobilePhones />} />
       <Route path="/Contact" element={<Contact />} />
       <Route exact path="/Cart" element={<CartPage />} />
-      {/* <Route exact path="/Login" element={<Login />} />
-      <Route exact path="/Register" element={<Register />} /> */}
       <Route exact path="/Login-Register" element={<Auth />} />
-
+      <Route exact path="/Verification" element={<Verification />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

@@ -13,7 +13,6 @@ import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import { AuthState } from "../context/authContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Validators } from "../validators/authValidators";
 
@@ -22,9 +21,7 @@ const theme = createTheme();
 export default function Register({ state }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const auth = AuthState();
   const navigate = useNavigate();
-  const data = useLocation();
   const [fromGoogle, setFromGoogle] = useState(false);
   const [extra, setExtra] = useState(null);
   const [validation, setValidation] = useState({});
@@ -49,8 +46,11 @@ export default function Register({ state }) {
       if (data.message !== "OK") {
         setError(data.message);
       } else {
-        auth.login({ token: data.token, userId: data.userId });
-        navigate("/Mobile-Phones");
+        //auth.login({ token: data.token, userId: data.userId });
+        //navigate("/Mobile-Phones");
+        navigate("/Verification", {
+          state: { email: data.email, phone: data.phone, userId: data.userId },
+        });
       }
       setLoading(false);
     } catch (error) {

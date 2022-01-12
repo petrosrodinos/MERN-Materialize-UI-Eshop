@@ -3,36 +3,21 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
 const shopRoutes = require("./routes/shopRoutes");
+const verificationRoutes = require("./routes/verificationRoutes");
 const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
-var path = require("path");
+const { specs } = require("./utils/swagger");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const { deleteUnverifiedUsers } = require("./utils/cleanups");
 
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Eshop API",
-      version: "1.0.0",
-      description: "Simple eshop project API,tp5006",
-    },
-    servers: [
-      {
-        url: process.env.PRODUCTION_URL,
-      },
-    ],
-  },
-  apis: [path.join(__dirname, "./swagger-config/*.yaml")],
-};
-
-const specs = swaggerJsDoc(options);
+//deleteUnverifiedUsers();
 
 app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/shop", shopRoutes);
+app.use("/api/verification", verificationRoutes);
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 

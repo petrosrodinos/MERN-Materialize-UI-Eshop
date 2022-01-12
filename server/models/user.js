@@ -7,6 +7,9 @@ const userSchema = mongoose.Schema(
     password: { type: String, required: true, max: 30, min: 5 },
     email: { type: String, min: 3, max: 20 },
     address: { type: String, required: true, min: 3, max: 20 },
+    emailVerified: { type: Boolean, required: true, default: false },
+    phoneVerified: { type: Boolean, required: true, default: false },
+    createdAt: { type: Date, required: true, default: Date.now() },
   }
   //   { timestaps: true }
 );

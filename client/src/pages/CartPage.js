@@ -60,6 +60,7 @@ export default function CartPage() {
         navigate("/Mobile-Phones");
       }
     } catch (error) {
+      console.log(error);
       setError(true);
       setLoading(false);
       setStatus("3");

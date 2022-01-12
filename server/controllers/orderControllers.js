@@ -36,6 +36,7 @@ const createOrder = async (req, res, next) => {
   const { products, shopId, total } = req.body;
   const userId = req.userId;
 
+  console.log(products, total);
   try {
     newOrder = await Order.create({ userId, products, shopId, total });
   } catch (error) {

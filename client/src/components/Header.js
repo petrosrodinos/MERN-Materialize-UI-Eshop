@@ -23,8 +23,8 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import { AuthState } from "../context/authContext";
-import { CartState } from "../context/cartContext";
 import { useNavigate } from "react-router-dom";
+import { CartState } from "../context/cartContext";
 import HomeIcon from "@mui/icons-material/Home";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -319,8 +319,6 @@ const Header = (props) => {
                 aria-haspopup="true"
                 onClick={() => {
                   navigate("/Cart");
-                  if (cart.count >= 1) {
-                  }
                 }}
               >
                 <StyledBadge

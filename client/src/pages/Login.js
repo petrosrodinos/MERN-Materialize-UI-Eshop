@@ -20,18 +20,7 @@ import { useNavigate } from "react-router-dom";
 import GoogleLogin from "react-google-login";
 import { Validators } from "../validators/authValidators";
 
-//require("dotenv").config();
-
 const theme = createTheme();
-
-// const mytheme = createTheme({
-//   palette: {
-//     primary: "#009688",
-//     secondary: {
-//       main: "#ff6e40",
-//     },
-//   },
-// });
 
 const validation = Validators["LOGIN"];
 
@@ -54,10 +43,24 @@ export default function Login({ onGoogleLogin }) {
       if (data.message === "OK") {
         auth.login({ token: data.token, userId: data.userId });
         navigate("/Mobile-Phones");
-      } else {
-        setError(true);
       }
+      if (data.message === "NOT-VERIFIED") {
+        if (!data.emailVerified) {
+          console.log("mail");
+          navigate("/Verification", {
+            state: { email: data.email, userId: data.userId, missing: "email" },
+          });
+        }
+        if (!data.phoneVerified) {
+          console.log("phone");
+          navigate("/Verification", {
+            state: { phone: data.phone, userId: data.userId, missing: "phone" },
+          });
+        }
+      }
+      setError(false);
       setLoading(false);
+      console.log(data);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -86,14 +89,8 @@ export default function Login({ onGoogleLogin }) {
           email: response.profileObj.email,
         });
         setLoading(false);
-        // navigate("/Register", {
-        //   state: {
-        //     google: true,
-        //     username: response.profileObj.name,
-        //     email: response.profileObj.email,
-        //   },
-        // });
       }
+      console.log(data);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -169,7 +166,7 @@ export default function Login({ onGoogleLogin }) {
             />
             <br />
             <GoogleLogin
-              clientId="173624606026-rimu21tghp3btp1l9r9smcpjeuodrsnp.apps.googleusercontent.com"
+              clientId={process.env.REACT_APP_GOOGLE_API}
               buttonText="Login with Google"
               onSuccess={responseSuccessGoogle}
               onFailure={responseErrorGoogle}
