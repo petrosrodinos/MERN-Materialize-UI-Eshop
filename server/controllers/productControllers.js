@@ -65,15 +65,6 @@ const getAllProducts = async (req, res, next) => {
         message: "Fetching products failed!",
       });
     });
-  // let products;
-
-  // try {
-  //   products = await Product.find({}, "-createdAt -updatedAt");
-  // } catch (error) {
-  //   return res.json({ message: "error fetching products" });
-  // }
-
-  // return res.json({ message: "OK", products: products });
 };
 
 module.exports = {

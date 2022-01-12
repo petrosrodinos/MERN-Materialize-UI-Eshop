@@ -29,7 +29,7 @@ export const useCart = () => {
   const getCartData = useCallback(() => {
     let cart = JSON.parse(localStorage.getItem("cart"));
     if (cart) {
-      console.log(cart);
+      //console.log(cart);
       let productIds = [];
       let shopId = cart[0].shopId;
       cart.map((c) => {

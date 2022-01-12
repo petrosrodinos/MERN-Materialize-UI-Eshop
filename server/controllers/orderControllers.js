@@ -1,5 +1,8 @@
+require("dotenv").config();
 const Order = require("../models/order");
 const User = require("../models/user");
+const Product = require("../models/product");
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 const getOrders = async (req, res, next) => {
   const userId = req.userId;
@@ -31,12 +34,52 @@ const getOrders = async (req, res, next) => {
   });
 };
 
+const orderCheckout = async (req, res, next) => {
+  const { products } = req.body;
+  let orderProducts;
+  let productsForStripe;
+
+  try {
+    orderProducts = await Product.find({ _id: { $in: products } });
+
+    productsForStripe = orderProducts.map((item) => {
+      return {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.name,
+            description: "good phone",
+          },
+          unit_amount: item.price * 100,
+        },
+        quantity: 1,
+      };
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: productsForStripe,
+      success_url: `${process.env.CLIENT_URL}Order-Message?success=true`,
+      cancel_url: `${process.env.CLIENT_URL}Order-Message?success=false`,
+    });
+
+    res.json({ message: "OK", url: session.url });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+};
+
 const createOrder = async (req, res, next) => {
   let newOrder;
   const { products, shopId, total } = req.body;
   const userId = req.userId;
 
-  console.log(products, total);
   try {
     newOrder = await Order.create({ userId, products, shopId, total });
   } catch (error) {
@@ -46,7 +89,7 @@ const createOrder = async (req, res, next) => {
       .json({ message: "error creating order", status: "500" });
   }
 
-  return res.json({ message: "OK", order: newOrder });
+  return res.json({ message: "OK" });
 };
 
 const getOrdersByPhone = async (req, res, next) => {
@@ -72,4 +115,5 @@ module.exports = {
   getOrders,
   createOrder,
   getOrdersByPhone,
+  orderCheckout,
 };

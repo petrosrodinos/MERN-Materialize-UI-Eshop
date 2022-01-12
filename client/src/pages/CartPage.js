@@ -4,8 +4,8 @@ import { CartState } from "../context/cartContext";
 import Phone from "../components/Phone";
 import ConfirmModal from "../components/ConfirmModal";
 import { AuthState } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -20,7 +20,6 @@ export default function CartPage() {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (cartstate.cart) {
@@ -49,23 +48,21 @@ export default function CartPage() {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}shop/orders`,
+        `${process.env.REACT_APP_API_URL}shop/checkout`,
         { shopId, products: productIds, total },
         config
       );
       setLoading(false);
       if (data.message === "OK") {
-        setStatus("0");
-        cartstate.emptyCart();
-        navigate("/Mobile-Phones");
+        //console.log(data.order);
+        window.location = data.url;
       }
     } catch (error) {
       console.log(error);
-      setError(true);
       setLoading(false);
       setStatus("3");
+      setOpen(true);
     }
-    setOpen(true);
   };
 
   return (

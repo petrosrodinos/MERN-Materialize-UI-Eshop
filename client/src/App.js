@@ -16,6 +16,7 @@ import CartProvider from "./context/cartContext";
 import CreateProduct from "./pages/CreateProduct";
 import CartPage from "./pages/CartPage";
 import Auth from "./pages/Auth";
+import AfterCheckout from "./pages/AfterCheckout";
 
 function App() {
   //let routes;
@@ -55,6 +56,7 @@ function App() {
       <Route path="/Mobile-Phones" element={<MobilePhones />} />
       <Route path="/Contact" element={<Contact />} />
       <Route exact path="/Cart" element={<CartPage />} />
+      <Route exact path="/Order-Message" element={<AfterCheckout />} />
       <Route exact path="/Login-Register" element={<Auth />} />
       <Route exact path="/Verification" element={<Verification />} />
       <Route path="*" element={<Navigate to="/" />} />
