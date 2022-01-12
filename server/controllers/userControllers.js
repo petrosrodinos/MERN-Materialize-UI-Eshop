@@ -92,7 +92,7 @@ module.exports.login = async (req, res, next) => {
   }
 
   if (!existingUser) {
-    return res.json({ message: "Invalid credentials could not log you in." });
+    return res.json({ message: "INVALID" });
   }
 
   let isValidPassword = false;

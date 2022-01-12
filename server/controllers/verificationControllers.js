@@ -9,6 +9,8 @@ const client = require("twilio");
 module.exports.sendEmail = async (req, res, next) => {
   try {
     const OTP = generateOTP();
+    console.log("generated: ", OTP);
+
     const verificationToken = new VerificationToken({
       owner: req.body.userId,
       token: OTP,
@@ -17,7 +19,6 @@ module.exports.sendEmail = async (req, res, next) => {
     await verificationToken.save();
 
     // sgMail.setApiKey(process.env.MAIL_KEY);
-
     // const message = {
     //   to: "petros.rodinos@yahoo.com",
     //   from: "petrospotamaki@yahoo.gr",
@@ -25,9 +26,7 @@ module.exports.sendEmail = async (req, res, next) => {
     //   text: "Email Verification Code: " + OTP,
     //   html: `<h1>Email Verification Code: ${OTP}</h1>`,
     // };
-
     // const res = await sgMail.send(message);
-    // console.log(res);
 
     mailTransport().sendMail({
       from: "emailverification@gmail.com",
@@ -38,7 +37,7 @@ module.exports.sendEmail = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.json({
-      message: "Could not send verification email",
+      message: "Could not send verification code on you email",
     });
   }
 
@@ -52,6 +51,7 @@ module.exports.sendSms = async (req, res, next) => {
 
   try {
     const OTP = generateOTP();
+    console.log("generated: ", OTP);
     const verificationToken = new VerificationToken({
       owner: req.body.userId,
       token: OTP,
@@ -65,11 +65,11 @@ module.exports.sendSms = async (req, res, next) => {
       from: "+37282720765",
     });
 
-    console.log(message);
+    //console.log(message);
   } catch (error) {
     console.log(error);
     return res.json({
-      message: "Could not send verification email",
+      message: "Could not send verification code",
     });
   }
 
@@ -80,6 +80,7 @@ module.exports.sendSms = async (req, res, next) => {
 
 module.exports.verifyCode = async (req, res, next) => {
   const { userId, otp, type } = req.body;
+  console.log("to verify: ", otp);
   if (!userId || !otp.trim())
     return res.json({
       message: "Verification failed, please try again later 1",
@@ -120,14 +121,14 @@ module.exports.verifyCode = async (req, res, next) => {
   await VerificationToken.findByIdAndDelete(token._id);
   await user.save();
 
-  let userToken = createToken({
-    userId: user._id,
-    email: user.email,
-  });
+  // let userToken = createToken({
+  //   userId: user._id,
+  //   email: user.email,
+  // });
 
   res.json({
     message: "OK",
-    userId: user._id,
-    token: userToken,
+    // userId: user._id,
+    // token: userToken,
   });
 };

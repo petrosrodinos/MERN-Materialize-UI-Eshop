@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -6,8 +6,9 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import { Typography, Card, CardContent, Container } from "@mui/material";
 import EmailVerification from "../components/EmailVerification";
+import { AuthState } from "../context/authContext";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import axios from "axios";
 const steps = ["Email Verification", "Phone Verification"];
 
 export default function Verification() {
@@ -17,6 +18,7 @@ export default function Verification() {
   const [missing, setMissing] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  const auth = AuthState();
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -48,6 +50,24 @@ export default function Verification() {
     }
     setvalues(location.state);
   }, [location.state]);
+
+  useCallback(async () => {
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_URL}users/login`,
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
+      if (data.message === "OK") {
+        auth.login({ token: data.token, userId: data.userId });
+        navigate("/Mobile-Phones");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [activeStep === steps.length]);
 
   return (
     <Container component="main" maxWidth="md">

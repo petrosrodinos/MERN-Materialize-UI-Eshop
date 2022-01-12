@@ -19,10 +19,8 @@ export default function EmailVerification({ values, onConfirm, type }) {
   const [code, setCode] = useState("");
   const [vType, setvType] = useState("");
   const [vals, setVals] = useState();
-  const auth = AuthState();
-  const navigate = useNavigate();
 
-  const sendEmail = async () => {
+  const sendCode = async () => {
     if (!values) return;
     let url;
     let userData = {};
@@ -73,19 +71,16 @@ export default function EmailVerification({ values, onConfirm, type }) {
       );
       if (data.message === "OK") {
         onConfirm();
-        // auth.login({ token: data.token, userId: data.userId });
-        // navigate("/Mobile-Phones");
       } else {
         setError(data.message);
       }
       setLoading(false);
-      //console.log(data);
+      console.log(data);
     } catch (error) {
       console.log(error);
       setLoading(false);
       setError("An error occured");
     }
-    setSend(false);
     setCode("");
   };
 
@@ -127,8 +122,8 @@ export default function EmailVerification({ values, onConfirm, type }) {
               }
             />
             <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-            <IconButton color="primary" sx={{ p: "10px" }} onClick={sendEmail}>
-              <SendIcon />
+            <IconButton color="primary" sx={{ p: "10px" }} onClick={sendCode}>
+              {!loading ? <SendIcon /> : <CircularProgress color="success" />}
             </IconButton>
             {send && (
               <Snackbar open={send} autoHideDuration={3000}>
@@ -162,12 +157,6 @@ export default function EmailVerification({ values, onConfirm, type }) {
                 <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
               </Paper>
               <br />
-              {error && (
-                <Alert severity="error">
-                  <AlertTitle>Error</AlertTitle>
-                  {error}
-                </Alert>
-              )}
               <Button
                 onClick={confirmCode}
                 disabled={loading}
@@ -177,6 +166,13 @@ export default function EmailVerification({ values, onConfirm, type }) {
                 {!loading ? "Verify" : <CircularProgress color="success" />}
               </Button>
             </>
+          )}
+          <br />
+          {error && (
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {error}
+            </Alert>
           )}
         </CardContent>
       </Card>

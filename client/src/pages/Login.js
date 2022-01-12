@@ -44,7 +44,15 @@ export default function Login({ onGoogleLogin }) {
         auth.login({ token: data.token, userId: data.userId });
         navigate("/Mobile-Phones");
       }
+      if (data.message === "INVALID") {
+        setError(true);
+        setLoading(false);
+        return;
+      }
       if (data.message === "NOT-VERIFIED") {
+        navigate("/Verification", {
+          state: { email: data.email, phone: data.phone, userId: data.userId },
+        });
         if (!data.emailVerified) {
           console.log("mail");
           navigate("/Verification", {
@@ -60,7 +68,7 @@ export default function Login({ onGoogleLogin }) {
       }
       setError(false);
       setLoading(false);
-      console.log(data);
+      //console.log(data);
     } catch (error) {
       console.log(error);
       setLoading(false);
