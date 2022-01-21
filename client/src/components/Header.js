@@ -123,7 +123,6 @@ const Header = (props) => {
       <MessageOutlinedIcon />,
     ];
   } else {
-    // pages = ["Home", "Login", "Register", "Mobile-Phones", "Contact"];
     pages = ["Home", "Login-Register", "Mobile-Phones", "Contact"];
     icons = [
       <HomeIcon />,
@@ -131,13 +130,6 @@ const Header = (props) => {
       <PhoneAndroidOutlinedIcon />,
       <MessageOutlinedIcon />,
     ];
-    // icons = [
-    //   <HomeIcon />,
-    //   <VpnKeyOutlinedIcon />,
-    //   <LoginOutlinedIcon />,
-    //   <PhoneAndroidOutlinedIcon />,
-    //   <MessageOutlinedIcon />,
-    // ];
   }
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -233,7 +225,7 @@ const Header = (props) => {
                   open={mobileOpen}
                   onClose={handleDrawerToggle}
                   ModalProps={{
-                    keepMounted: true, // Better open performance on mobile.
+                    keepMounted: true,
                   }}
                   sx={{
                     display: { xs: "block", sm: "none" },

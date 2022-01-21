@@ -99,11 +99,11 @@ module.exports.login = async (req, res, next) => {
   try {
     isValidPassword = await bcrypt.compare(password, existingUser.password);
   } catch (error) {
-    return res.json({ message: "Invalid credentials could not log you in." });
+    return res.json({ message: "INVALID" });
   }
 
   if (!isValidPassword) {
-    return res.json({ message: "Invalid credentials could not log you in." });
+    return res.json({ message: "INVALID" });
   }
 
   if (!existingUser.emailVerified || !existingUser.phoneVerified) {

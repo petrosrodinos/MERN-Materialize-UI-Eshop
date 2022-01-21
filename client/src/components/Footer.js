@@ -27,7 +27,7 @@ export default function Footer() {
         }}
       >
         <Container maxWidth="sm">
-          <Grid container>
+          <Grid container columns={12}>
             <Grid item xs={6}>
               <b>Email:</b> petros.rodinos@yahoo.com
             </Grid>

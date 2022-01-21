@@ -51,23 +51,11 @@ export default function Verification() {
     setvalues(location.state);
   }, [location.state]);
 
-  useCallback(async () => {
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}users/login`,
-        {
-          email: values.email,
-          password: values.password,
-        }
-      );
-      if (data.message === "OK") {
-        auth.login({ token: data.token, userId: data.userId });
-        navigate("/Mobile-Phones");
-      }
-    } catch (error) {
-      console.log(error);
+  useEffect(async () => {
+    if (activeStep === steps.length) {
+      navigate("/Login-Register");
     }
-  }, [activeStep === steps.length]);
+  }, [activeStep]);
 
   return (
     <Container component="main" maxWidth="md">
