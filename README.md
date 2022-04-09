@@ -1,4 +1,5 @@
 # MERN-Stack-Materialize-Eshop
+LIVE URL https://materialize-eshop.herokuapp.com/
 A multi vendor eshop with Material UI</br>
 -User login register.</br>
 -Phone verification.</br>
